@@ -77,8 +77,6 @@ def bit_1_counter_in_base_2(x: int) -> int:
     return counter
 
 
-
-
 def get_longest_same_bit_counts(lst: list[int]) -> list[int]:
     '''
     Returneaza subsecventa maxima cu proprietea ca toate elementele sa aiba acelasi numar de cifra 1 in scrierea binara
@@ -105,18 +103,72 @@ def test_get_longest_same_bit_counts():
     assert get_longest_same_bit_counts([16, 454, 7, 6, 10, 7, 10, 6, 5, 16, 454]) == [10,6,5]
     assert get_longest_same_bit_counts([10, 454, 6]) == [10]
 
+def numar_cu_cifre_prime(numar: int) -> bool:
+    '''
+    Verifica daca un numar are toate cifrele prime
+    :param numar: intreg
+    :return: True sau False
+    '''
+    str_cifre_prime = "2357"
+    str_numar = str(numar)
+    for cifra in str_numar:
+        if str_cifre_prime.find(cifra) == -1:
+            return False
+    return True
+
+
+def get_longest_prime_digits(lst: list[int]) -> list[int]:
+    '''
+    Returneaza subsecventa maxima cu proprietatea ca toate elementele sa aiba toate cifrele prime
+    :param lst: lista de numere intregi
+    :return: subsecventa_maxima: lista de numere intregi
+    '''
+    numara_numerele_cerute = 0
+    maxim_de_numere_cerute = 0
+    pozitia_initiala = 0
+    pozitia_finala = 0
+    subsecventa_maxima = []
+    for i in range(len(lst)):
+        if numar_cu_cifre_prime(lst[i]) is True:
+            numara_numerele_cerute = numara_numerele_cerute + 1
+        else:
+            if numara_numerele_cerute > maxim_de_numere_cerute:
+                maxim_de_numere_cerute = numara_numerele_cerute
+                pozitia_initiala = i - maxim_de_numere_cerute
+                pozitia_finala = i - 1
+            numara_numerele_cerute = 0
+    if numara_numerele_cerute != 0 and numara_numerele_cerute > maxim_de_numere_cerute:
+        maxim_de_numere_cerute = numara_numerele_cerute
+        pozitia_initiala = len(lst) - maxim_de_numere_cerute
+        pozitia_finala = len(lst)
+
+    if maxim_de_numere_cerute == 0:
+        return subsecventa_maxima
+    subsecventa_maxima = lst [pozitia_initiala:pozitia_finala + 1]
+    return subsecventa_maxima
+
+
+def test_get_longest_prime_digits():
+    assert get_longest_prime_digits([132, 525,222,456,372,7533,25,10]) == [372,7533,25]
+    assert get_longest_prime_digits([121,21315,52343,6547,123]) == []
+    assert get_longest_prime_digits([22,55, 44 ,77,33]) == [22,55]
+    assert get_longest_prime_digits([22,33,77,55]) == [22,33,77,55]
+
 
 def print_Menu():
     print("  1. Citire lista.")
     print("  2. Determinare cea mai lungă subsecvență cu proprietatea ca suma numerelor sa fie prima")
-    print("  3. Determinare cea mai lungă subsecvență cu proprietatea ca toate numerele sa aiba același număr de biți de 1 în reprezentarea binară.")
-    print("  4. Iesire")
+    print("  3. Determinare cea mai lungă subsecvență cu proprietatea ca toate numerele sa aiba"
+          " același număr de biți de 1 în reprezentarea binară.")
+    print("  4. Determinare cea mai lunga subsecventa cu proprietatea ca toate numerele sa aiba cifre prime")
+    print("  5. Iesire")
 
 
 def main():
     test_get_longest_same_bit_counts()
     test_is_prime()
     test_get_longest_sum_is_prime()
+    test_get_longest_prime_digits()
     print_Menu()
     lst=[]
     should_run = True
@@ -129,6 +181,8 @@ def main():
         elif optiune == "3":
             print(get_longest_same_bit_counts(lst))
         elif optiune == "4":
+            print(get_longest_prime_digits(lst))
+        elif optiune == "5":
             should_run = False
         else:
             print("Ai introdus o optiune gresita! Mai incearca! ")
